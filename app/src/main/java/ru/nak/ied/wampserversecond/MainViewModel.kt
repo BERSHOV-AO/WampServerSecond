@@ -19,4 +19,11 @@ class MainViewModel @Inject constructor(
             userList.value = mainApi.getAllUsers()
         }
     }
+
+    fun saveUser(user: User) = viewModelScope.launch {
+        // записали
+        mainApi.saveUser(user)
+        // сразу считали
+        userList.value = mainApi.getAllUsers()
+    }
 }

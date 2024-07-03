@@ -1,6 +1,7 @@
 package ru.nak.ied.wampserversecond
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
@@ -51,24 +52,25 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
         mutableStateOf("")
     }
     Column(
-
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween
-    )
-    {
+    ) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(0.7f)
-            //.background(color = Color.Red)
         ) {
             items(viewModel.userList.value) {
-                Card(modifier = Modifier.fillMaxWidth()) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp)
+                ) {
                     Text(
                         text = it.name, modifier = Modifier
                             .fillMaxWidth()
-                            .padding(10.dp)
                             .wrapContentWidth()
+                            .padding(10.dp)
                     )
                 }
             }
@@ -81,6 +83,7 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
                     .padding(start = 16.dp, end = 16.dp),
                 value = name.value,
                 onValueChange = {
+                    // текст который пишем - имя
                     name.value = it
                 })
             Spacer(modifier = Modifier.height(5.dp))
@@ -89,6 +92,7 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
                     .fillMaxWidth()
                     .padding(start = 16.dp, end = 16.dp),
                 value = age.value, onValueChange = {
+                    // текст который пишем - возраст
                     age.value = it
                 })
             Spacer(modifier = Modifier.height(5.dp))
@@ -97,7 +101,17 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
                     .fillMaxWidth()
                     .padding(start = 16.dp, end = 16.dp),
                 onClick = {
-
+                    Log.d("MyLog", "User mame: ${name.value} ")
+                    Log.d("MyLog", "User mame: ${age.value} ")
+                    // при нажатии на кнопку записываем нового пользователя, и обновляем информацию на экране
+                    viewModel.saveUser(
+                        User(
+                            name.value,
+                            0,
+                            System.currentTimeMillis().toString(),
+                            age.value
+                        )
+                    )
                 }) {
                 Text(text = "Save user")
             }
@@ -105,7 +119,6 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
         }
     }
 }
-
 
 //@AndroidEntryPoint
 //class MainActivity : ComponentActivity() {
