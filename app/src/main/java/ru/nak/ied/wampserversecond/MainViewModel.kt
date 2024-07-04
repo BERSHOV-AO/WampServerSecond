@@ -1,5 +1,6 @@
 package ru.nak.ied.wampserversecond
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -25,5 +26,11 @@ class MainViewModel @Inject constructor(
         mainApi.saveUser(user)
         // сразу считали
         userList.value = mainApi.getAllUsers()
+    }
+
+    fun uploadImage(imageData: ImageData) = viewModelScope.launch {
+        val imageResponse = mainApi.uploadImage(imageData)
+        Log.d("MyLog", "Image URL: ${imageResponse.url}")
+        Log.d("MyLog", "Image upload message: ${imageResponse.message}")
     }
 }

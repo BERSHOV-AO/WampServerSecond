@@ -11,4 +11,8 @@ interface MainApi {
     // это body
     @POST("save_user.php")
     suspend fun saveUser(@Body user: User)
+
+    // отправляем ImageData, ждем ImageUploadResponse
+    @POST("upload_image.php")
+    suspend fun uploadImage(@Body imageData: ImageData): ImageUploadResponse
 }

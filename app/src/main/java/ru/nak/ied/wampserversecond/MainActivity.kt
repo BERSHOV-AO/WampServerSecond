@@ -1,6 +1,10 @@
 package ru.nak.ied.wampserversecond
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -27,6 +31,8 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import java.io.ByteArrayOutputStream
 
 
 @AndroidEntryPoint
@@ -44,6 +50,9 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
+    // создаем контекст для загрузки картинок
+    val context = LocalContext.current
+
 
     val name = remember {
         mutableStateOf("")
@@ -116,8 +125,31 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
                 Text(text = "Save user")
             }
             Spacer(modifier = Modifier.height(5.dp))
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp),
+                onClick = {
+                    viewModel.uploadImage(
+                        ImageData(
+                            bitmapToBase64(context),
+                            "test.png"
+                        )
+                    )
+
+                }) {
+                Text(text = "Save images")
+            }
         }
     }
+}
+
+private fun bitmapToBase64(context: Context) : String {
+    val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.logo)
+    val byteOutputStream = ByteArrayOutputStream()
+    bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteOutputStream)
+    val byteArray = byteOutputStream.toByteArray()
+    return Base64.encodeToString(byteArray, Base64.DEFAULT)
 }
 
 //@AndroidEntryPoint
